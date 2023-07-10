@@ -7,9 +7,9 @@ class AlbumHandler {
 
     this.postAlbumHandler = this.postAlbumHandler.bind(this);
     // this.getNotesHandler = this.getNotesHandler.bind(this);
-    // this.getNoteByIdHandler = this.getNoteByIdHandler.bind(this);
-    // this.putNoteByIdHandler = this.putNoteByIdHandler.bind(this);
-    // this.deleteNoteByIdHandler = this.deleteNoteByIdHandler.bind(this);
+    this.getAlbumByIdHandler = this.getAlbumByIdHandler.bind(this);
+    this.putAlbumByIdHandler = this.putAlbumByIdHandler.bind(this);
+    this.deleteAlbumByIdHandler = this.deleteAlbumByIdHandler.bind(this);
   }
 
   async postAlbumHandler(request, h) {
@@ -58,91 +58,91 @@ class AlbumHandler {
   //   };
   // }
 
-  // async ge-tNoteByIdHandler(request, h) {
-  //   try {
-  //     const { id } = request.params;
-  //     const note = await this._service.getNoteById(id);
-  //     return {
-  //       status: 'success',
-  //       data: {
-  //         note,
-  //       },
-  //     };
-  //   } catch (error) {
-  //     if (error instanceof ClientError) {
-  //       const response = h.response({
-  //         status: 'fail',
-  //         message: error.message,
-  //       });
-  //       response.code(error.statusCode);
-  //       return response;
-  //     }
-  //     const response = h.response({
-  //       status: 'error',
-  //       message: 'Maaf, terjadi kegagalan pada server kami.',
-  //     });
-  //     response.code(500);
-  //     console.error(error);
-  //     return response;
-  //   }
-  // }
+  async getAlbumByIdHandler(request, h) {
+    try {
+      const { id } = request.params;
+      const album = await this._service.getAlbumById(id);
+      return {
+        status: 'success',
+        data: {
+          album,
+        },
+      };
+    } catch (error) {
+      if (error instanceof ClientError) {
+        const response = h.response({
+          status: 'fail',
+          message: error.message,
+        });
+        response.code(error.statusCode);
+        return response;
+      }
+      const response = h.response({
+        status: 'error',
+        message: 'Maaf, terjadi kegagalan pada server kami.',
+      });
+      response.code(500);
+      console.error(error);
+      return response;
+    }
+  }
 
-  // async putNoteByIdHandler(request, h) {
-  //   try {
-  //     this._validator.validateNotePayload(request.payload);
-  //     const { id } = request.params;
+  async putAlbumByIdHandler(request, h) {
+    try {
+      this._validator.validateAlbumPayload(request.payload);
+      const { id } = request.params;
 
-  //     await this._service.editNoteById(id, request.payload);
+      await this._service.editAlbumById(id, request.payload);
 
-  //     return {
-  //       status: 'success',
-  //       message: 'Catatan berhasil diperbarui',
-  //     };
-  //   } catch (error) {
-  //     if (error instanceof ClientError) {
-  //       const response = h.response({
-  //         status: 'fail',
-  //         message: error.message,
-  //       });
-  //       response.code(error.statusCode);
-  //       return response;
-  //     }
-  //     const response = h.response({
-  //       status: 'error',
-  //       message: 'Maaf, terjadi kegagalan pada server kami.',
-  //     });
-  //     response.code(500);
-  //     console.error(error);
-  //     return response;
-  //   }
-  // }
+      return {
+        status: 'success',
+        message: 'Album berhasil diperbarui',
+      };
+    } catch (error) {
+      if (error instanceof ClientError) {
+        const response = h.response({
+          status: 'fail',
+          message: error.message,
+        });
+        response.code(error.statusCode);
+        return response;
+      }
+      const response = h.response({
+        status: 'error',
+        message: 'Maaf, terjadi kegagalan pada server kami.',
+      });
+      response.code(500);
+      console.error(error);
+      return response;
+    }
+  }
 
-  // async deleteNoteByIdHandler(request, h) {
-  //   try {
-  //     const { id } = request.params;
-  //     await this._service.deleteNoteById(id);
-  //     return {
-  //       status: 'success',
-  //       message: 'Catatan berhasil dihapus',
-  //     };
-  //   } catch (error) {
-  //     if (error instanceof ClientError) {
-  //       const response = h.response({
-  //         status: 'fail',
-  //         message: error.message,
-  //       });
-  //       response.code(error.statusCode);
-  //       return response;
-  //     }
-  //     const response = h.response({
-  //       status: 'error',
-  //       message: 'Maaf, terjadi kegagalan pada server kami.',
-  //     });
-  //     response.code(500);
-  //     console.error(error);
-  //     return response;
-  //   }
-  // }
+  async deleteAlbumByIdHandler(request, h) {
+    try {
+      const { id } = request.params;
+      await this._service.deleteAlbumById(id);
+      return {
+        status: 'success',
+        message: 'Album berhasil dihapus',
+      };
+    } catch (error) {
+      if (error instanceof ClientError) {
+        const response = h.response({
+          status: 'fail',
+          message: error.message,
+        });
+        response.code(error.statusCode);
+        return response;
+      }
+      const response = h.response({
+        status: 'error',
+        message: 'Maaf, terjadi kegagalan pada server kami.',
+      });
+      response.code(500);
+      console.error(error);
+      return response;
+    }
+  }
 }
 
 module.exports = AlbumHandler;

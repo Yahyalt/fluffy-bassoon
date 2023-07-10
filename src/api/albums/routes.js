@@ -9,20 +9,20 @@ const routes = (handler) => [
   //   path: '/notes',
   //   handler: handler.getNotesHandler,
   // },
-  // {
-  //   method: 'GET',
-  //   path: '/notes/{id}',
-  //   handler: handler.getNoteByIdHandler,
-  // },
-  // {
-  //   method: 'PUT',
-  //   path: '/notes/{id}',
-  //   handler: handler.putNoteByIdHandler,
-  // },
-  // {
-  //   method: 'DELETE',
-  //   path: '/notes/{id}',
-  //   handler: handler.deleteNoteByIdHandler,
-  // },
+  {
+    method: 'GET',
+    path: '/albums/{id}',
+    handler: handler.getAlbumByIdHandler,
+  },
+  {
+    method: 'PUT',
+    path: '/albums/{id}',
+    handler: handler.putAlbumByIdHandler,
+  },
+  {
+    method: 'DELETE',
+    path: '/albums/{id}',
+    handler: handler.deleteAlbumByIdHandler,
+  },
 ];
 module.exports = routes;

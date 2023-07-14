@@ -2,14 +2,14 @@ const { Pool } = require('pg');
 const { nanoid } = require('nanoid');
 const InvariantError = require('../../exceptions/InvariantError');
 const NotFoundError = require('../../exceptions/NotFoundError');
-const { mapDBToModel } = require('../../utils');
+const { mapDBToModel } = require('../../utils/utils_album');
 
 class AlbumsService {
   constructor() {
     this._pool = new Pool();
   }
 
-  async addNote({ name, year }) {
+  async addAlbum({ name, year }) {
     const id = `album-${nanoid(16)}`;
     const createdAt = new Date().toISOString();
     const updatedAt = createdAt;

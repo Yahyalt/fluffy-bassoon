@@ -9,5 +9,10 @@ const routes = (handler) => [
     path: '/songs',
     handler: handler.getSongsHandler,
   },
+  {
+    method: 'GET',
+    path: '/songs/{id}',
+    handler: handler.getSongByIdHandler,
+  },
 ];
 module.exports = routes;

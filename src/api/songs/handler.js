@@ -6,6 +6,7 @@ class SongHandler {
     this._validator = validator;
 
     this.postSongHandler = this.postSongHandler.bind(this);
+    this.getSongsHandler = this.getSongsHandler.bind(this);
   }
 
   async postSongHandler(request, h) {
@@ -43,6 +44,21 @@ class SongHandler {
       console.error(error);
       return response;
     }
+  }
+
+  async getSongsHandler() {
+    const songs = await this._service.getSongs();
+    const MappedSongs = songs.map((song) => ({
+      id: song.id,
+      title: song.title,
+      performer: song.performer,
+    }));
+    return {
+      status: 'success',
+      data: {
+        songs: MappedSongs,
+      },
+    };
   }
 }
 module.exports = SongHandler;

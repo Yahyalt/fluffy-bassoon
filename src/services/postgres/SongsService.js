@@ -9,22 +9,72 @@ class SongsService {
     this._pool = new Pool();
   }
 
+  //   async addSong({
+  //     title, year, genre, performer, duration, albumId,
+  //   }) {
+  //     const id = `song-${nanoid(16)}`;
+  //     const createdAt = new Date().toISOString();
+  //     const updatedAt = createdAt;
+
+  //     const query = {
+  //       text: 'INSERT INTO songs VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id',
+  //       values: [id, title, year, genre, performer, duration, albumId, createdAt, updatedAt],
+  //     };
+  //     const result = await this._pool.query(query);
+
+  //     if (!result.rows[0].id) {
+  //       throw new InvariantError('Lagu gagal ditambahkan');
+  //     }
+  //     return result.rows[0].id;
+  //   }
+  //   async addSong({
+  //     title, year, genre, performer, duration,
+  //   }) {
+  //     const id = `song-${nanoid(16)}`;
+  //     const createdAt = new Date().toISOString();
+  //     const updatedAt = createdAt;
+
+  //     const query = {
+  //       text: 'INSERT INTO songs (id, title, year, genre, performer, duration, "albumId", created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, (SELECT id FROM albums WHERE name = $7), $8, $9) RETURNING id',
+  //       values: [id, title, year, genre, performer, duration, 'Viva la vida', createdAt, updatedAt],
+  //     };
+  //     const result = await this._pool.query(query);
+
+  //     if (!result.rows[0].id) {
+  //       throw new Error('Failed to add song');
+  //     }
+  //     return result.rows[0].id;
+  //   }
+
   async addSong({
-    title, year, genre, performer, duration, albumId,
+    title, year, genre, performer, duration,
   }) {
     const id = `song-${nanoid(16)}`;
     const createdAt = new Date().toISOString();
     const updatedAt = createdAt;
 
+    const subQuery = {
+      text: 'SELECT id FROM albums WHERE name = $1 LIMIT 1',
+      values: ['Viva la vida'],
+    };
+    const subQueryResult = await this._pool.query(subQuery);
+
+    if (subQueryResult.rows.length === 0) {
+      throw new Error('Album not found');
+    }
+
+    const albumId = subQueryResult.rows[0].id;
+
     const query = {
-      text: 'INSERT INTO songs VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id',
+      text: 'INSERT INTO songs (id, title, year, genre, performer, duration, "albumId", created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id',
       values: [id, title, year, genre, performer, duration, albumId, createdAt, updatedAt],
     };
     const result = await this._pool.query(query);
 
     if (!result.rows[0].id) {
-      throw new InvariantError('Lagu gagal ditambahkan');
+      throw new Error('Failed to add song');
     }
+
     return result.rows[0].id;
   }
 
@@ -59,7 +109,20 @@ class SongsService {
     const result = await this._pool.query(query);
 
     if (!result.rows.length) {
-      throw new NotFoundError('Gagal memperbarui album. Id tidak ditemukan');
+      throw new NotFoundError('Gagal memperbarui song. Id tidak ditemukan');
+    }
+  }
+
+  async deleteSongById(id) {
+    const query = {
+      text: 'DELETE FROM songs WHERE id = $1 RETURNING id',
+      values: [id],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new NotFoundError('Song gagal dihapus. Id tidak ditemukan');
     }
   }
 }

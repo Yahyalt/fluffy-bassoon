@@ -26,11 +26,6 @@ class AlbumsService {
     return result.rows[0].id;
   }
 
-  // async getNotes() {
-  //   const result = await this._pool.query('SELECT * FROM notes');
-  //   return result.rows.map(mapDBToModel);
-  // }
-
   async getAlbumById(id) {
     const query = {
       text: 'SELECT * FROM albums WHERE id = $1',

@@ -38,7 +38,7 @@ const init = async () => {
     },
   });
 
-  // registrasi plugin eksternal
+  // registrasi plugin eksterna l
   await server.register([
     {
       plugin: Jwt,

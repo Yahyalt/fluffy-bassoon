@@ -3,6 +3,7 @@ const { nanoid } = require('nanoid');
 const InvariantError = require('../../exceptions/InvariantError');
 const NotFoundError = require('../../exceptions/NotFoundError');
 const { mapDBToModel } = require('../../utils/utils_playlist');
+const AuthorizationError = require('../../exceptions/AuthorizationError');
 
 class PlaylistsService {
   constructor() {
@@ -28,46 +29,43 @@ class PlaylistsService {
     return result.rows[0].id;
   }
 
-  //   async getAlbumById(id) {
-  //     const query = {
-  //       text: 'SELECT * FROM albums WHERE id = $1',
-  //       values: [id],
-  //     };
-  //     const result = await this._pool.query(query);
+  async getPlaylists(owner) {
+    const query = {
+      text: 'SELECT * FROM playlist WHERE owner = $1',
+      values: [owner],
+    };
+    const result = await this._pool.query(query);
+    return result.rows.map(mapDBToModel);
+  }
 
-  //     if (!result.rows.length) {
-  //       throw new NotFoundError('Album tidak ditemukan');
-  //     }
+  async deletePlaylistById(id) {
+    const query = {
+      text: 'DELETE FROM playlists WHERE id = $1 RETURNING id',
+      values: [id],
+    };
 
-  //     return result.rows.map(mapDBToModel)[0];
-  //   }
+    const result = await this._pool.query(query);
 
-  //   async editAlbumById(id, { name, year }) {
-  //     const updatedAt = new Date().toISOString();
-  //     const query = {
-  //       text: 'UPDATE albums SET name = $1, year = $2, updated_at = $3 WHERE id = $4 RETURNING id',
-  //       values: [name, year, updatedAt, id],
-  //     };
+    if (!result.rows.length) {
+      throw new NotFoundError('Playlist gagal dihapus. Id tidak ditemukan');
+    }
+  }
 
-  //     const result = await this._pool.query(query);
+  async verifyPlaylistOwner(id, owner) {
+    const query = {
+      text: 'SELECT * FROM playlists WHERE id = $1',
+      values: [id],
+    };
 
-  //     if (!result.rows.length) {
-  //       throw new NotFoundError('Gagal memperbarui album. Id tidak ditemukan');
-  //     }
-  //   }
-
-  //   async deleteAlbumById(id) {
-  //     const query = {
-  //       text: 'DELETE FROM albums WHERE id = $1 RETURNING id',
-  //       values: [id],
-  //     };
-
-  //     const result = await this._pool.query(query);
-
-//     if (!result.rows.length) {
-//       throw new NotFoundError('Album gagal dihapus. Id tidak ditemukan');
-//     }
-//   }
+    const result = await this._pool.query(query);
+    if (!result.rows.length) {
+      throw new NotFoundError('Playlist tidak ditemukan');
+    }
+    const playlist = result.rows[0];
+    if (playlist.owner !== owner) {
+      throw new AuthorizationError('Anda tidak berhak mengakses resource ini');
+    }
+  }
 }
 
 module.exports = PlaylistsService;

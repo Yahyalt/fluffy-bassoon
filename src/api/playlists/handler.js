@@ -6,7 +6,7 @@ class PlaylistHandler {
     this._validator = validator;
 
     this.postPlaylistHandler = this.postPlaylistHandler.bind(this);
-    this.getPlaylistByIdHandler = this.getPlaylistsHandler.bind(this);
+    this.getPlaylistsHandler = this.getPlaylistsHandler.bind(this);
     this.deletePlaylistByIdHandler = this.deletePlaylistByIdHandler.bind(this);
     this.postSongPlaylistHandler = this.postSongPlaylistHandler.bind(this);
     this.getSongByPlaylistHandler = this.getSongByPlaylistHandler.bind(this);
@@ -49,18 +49,13 @@ class PlaylistHandler {
     }
   }
 
-  async getPlaylistsHandler() {
+  async getPlaylistsHandler(request) {
     const { id: credentialId } = request.auth.credentials;
     const playlists = await this._service.getPlaylists(credentialId);
-    const MappedPlaylists = playlists.map((playlist) => ({
-      id: playlist.id,
-      name: playlist.title,
-      username: playlist.username,
-    }));
     return {
       status: 'success',
       data: {
-        songs: MappedPlaylists,
+        playlists,
       },
     };
   }

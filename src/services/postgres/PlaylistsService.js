@@ -70,7 +70,7 @@ class PlaylistsService {
 
   async verifyPlaylistAccess(playlistId, songId) {
     try {
-      await this.verifyPlaylistAccess(playlistId, songId);
+      await this.verifyPlaylistOwner(playlistId, songId);
     } catch (error) {
       if (error instanceof NotFoundError) {
         throw error;

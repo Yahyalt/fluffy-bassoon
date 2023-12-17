@@ -25,7 +25,8 @@ class SongsService {
     if (subQueryResult.rows.length === 0) {
       throw new InvariantError('Album tidak ditemukan');
     }
-
+    // parameter album ID untuk melakukan verifikasi eksistensi 
+    //album berdasarkan ID nya sudah ada disini.
     const albumId = subQueryResult.rows[0].id;
 
     const query = {

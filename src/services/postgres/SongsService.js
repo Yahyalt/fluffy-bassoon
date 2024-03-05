@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const { Pool } = require('pg');
 const { nanoid } = require('nanoid');
 const InvariantError = require('../../exceptions/InvariantError');
@@ -9,29 +10,80 @@ class SongsService {
     this._pool = new Pool();
   }
 
+  // async addSong({
+  //   title, year, genre, performer, duration,
+  // }) {
+  //   const id = `song-${nanoid(16)}`;
+  //   const createdAt = new Date().toISOString();
+  //   const updatedAt = createdAt;
+
+  //   const subQuery = {
+  //     text: 'SELECT id FROM albums WHERE name = $1 LIMIT 1',
+  //     values: ['Viva la vida'],
+  //   };
+  //   const subQueryResult = await this._pool.query(subQuery);
+
+  //   if (subQueryResult.rows.length === 0) {
+  //     throw new InvariantError('Album tidak ditemukan');
+  //   }
+  //   // parameter album ID untuk melakukan verifikasi eksistensi
+  //   // album berdasarkan ID nya sudah ada disini.
+  //   const albumId = subQueryResult.rows[0].id;
+
+  //   const query = {
+  //     text: 'INSERT INTO songs VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id',
+  //     values: [
+  //       id,
+  //       title,
+  //       year,
+  //       genre,
+  //       performer,
+  //       duration,
+  //       albumId,
+  //       createdAt,
+  //       updatedAt,
+  //     ],
+  //   };
+  //   const result = await this._pool.query(query);
+
+  //   if (!result.rows[0].id) {
+  //     throw new InvariantError('Song gagal ditambahkan');
+  //   }
+
+  //   return result.rows[0].id;
+  // }
   async addSong({
-    title, year, genre, performer, duration,
+    title, year, genre, performer, duration, albumId,
   }) {
     const id = `song-${nanoid(16)}`;
     const createdAt = new Date().toISOString();
     const updatedAt = createdAt;
 
-    const subQuery = {
-      text: 'SELECT id FROM albums WHERE name = $1 LIMIT 1',
-      values: ['Viva la vida'],
-    };
-    const subQueryResult = await this._pool.query(subQuery);
+    if (albumId) {
+      const verifyAlbumQuery = {
+        text: 'SELECT id FROM albums WHERE id = $1 LIMIT 1',
+        values: [albumId],
+      };
+      const verifyAlbumResult = await this._pool.query(verifyAlbumQuery);
 
-    if (subQueryResult.rows.length === 0) {
-      throw new InvariantError('Album tidak ditemukan');
+      if (verifyAlbumResult.rows.length === 0) {
+        throw new InvariantError('Album tidak ditemukan');
+      }
     }
-    // parameter album ID untuk melakukan verifikasi eksistensi 
-    //album berdasarkan ID nya sudah ada disini.
-    const albumId = subQueryResult.rows[0].id;
 
     const query = {
       text: 'INSERT INTO songs (id, title, year, genre, performer, duration, "albumId", created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id',
-      values: [id, title, year, genre, performer, duration, albumId, createdAt, updatedAt],
+      values: [
+        id,
+        title,
+        year,
+        genre,
+        performer,
+        duration,
+        albumId,
+        createdAt,
+        updatedAt,
+      ],
     };
     const result = await this._pool.query(query);
 

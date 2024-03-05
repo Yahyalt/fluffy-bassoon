@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const { Pool } = require('pg');
 const { nanoid } = require('nanoid');
 const InvariantError = require('../../exceptions/InvariantError');
@@ -54,8 +55,8 @@ class PlaylistsService {
 
   async verifyPlaylistOwner(id, owner) {
     const query = {
-      text: 'SELECT * FROM playlists WHERE id = $1',
-      values: [id],
+      text: 'SELECT id FROM playlists WHERE id = $1 AND owner = $2',
+      values: [id, owner],
     };
 
     const result = await this._pool.query(query);

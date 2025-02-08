@@ -8,6 +8,14 @@ const routes = (handler) => [
     },
   },
   {
+    method: 'GET',
+    path: '/playlists/{id}/songs',
+    handler: handler.getSongPlaylistHandler,
+    options: {
+      auth: 'musicapp_jwt',
+    },
+  },
+  {
     method: 'DELETE',
     path: '/playlists/{id}/songs',
     handler: handler.deleteSongPlaylistHandler,

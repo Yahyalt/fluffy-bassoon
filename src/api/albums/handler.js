@@ -52,7 +52,12 @@ class AlbumHandler {
       return {
         status: 'success',
         data: {
-          album,
+          album: {
+            id: album.id,
+            name: album.name,
+            year: album.year,
+            songs: album.songs,
+          },
         },
       };
     } catch (error) {

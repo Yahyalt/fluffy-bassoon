@@ -62,6 +62,25 @@ class PlaylistHandler {
         })),
       },
     };
+      return {
+        status: 'success',
+        data: {
+          playlists: playlists.map((playlist) => ({
+            id: playlist.id,
+            name: playlist.name,
+            username: playlist.username,
+          })),
+        },
+      };
+    } catch (error) {
+      console.error('Error in getPlaylistsHandler:', error);
+      const response = h.response({
+        status: 'error',
+        message: 'Maaf, terjadi kegagalan pada server kami.',
+      });
+      response.code(500);
+      return response;
+    }
   }
 
   async deletePlaylistByIdHandler(request, h) {

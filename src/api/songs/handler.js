@@ -50,17 +50,17 @@ class SongHandler {
     }
   }
 
-  async getSongsHandler() {
-    const songs = await this._service.getSongs();
-    const MappedSongs = songs.map((song) => ({
-      id: song.id,
-      title: song.title,
-      performer: song.performer,
-    }));
+  async getSongsHandler(request) {
+    const { title } = request.query;
+    const songs = await this._service.getSongs(title);
     return {
       status: 'success',
       data: {
-        songs: MappedSongs,
+        songs: songs.map((song) => ({
+          id: song.id,
+          title: song.title,
+          performer: song.performer,
+        })),
       },
     };
   }

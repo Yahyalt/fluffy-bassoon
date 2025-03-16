@@ -52,16 +52,6 @@ class PlaylistHandler {
       const { id: credentialId } = request.auth.credentials;
       const playlists = await this._service.getPlaylists(credentialId);
 
-    return {
-      status: 'success',
-      data: {
-        playlists: playlists.map((playlist) => ({
-          id: playlist.id,
-          name: playlist.name,
-          username: playlist.username,
-        })),
-      },
-    };
       return {
         status: 'success',
         data: {

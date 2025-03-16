@@ -52,15 +52,34 @@ class PlaylistSongsHandler {
       const { id: playlistId } = request.params;
       const { id: credentialId } = request.auth.credentials;
 
-    await this._playlistsService.verifyPlaylistAccess(playlistId, credentialId);
-    const songs = await this._playlistSongsService.getSongsFromPlaylist(playlistId);
+      await this._playlistsService.verifyPlaylistAccess(playlistId, credentialId);
+      const playlist = await this._playlistSongsService.getPlaylistWithSongs(playlistId);
 
-    return {
-      status: 'success',
-      data: {
-        songs,
-      },
-    };
+      return {
+        status: 'success',
+        data: {
+          playlist,
+        },
+      };
+    } catch (error) {
+      console.error('Error in getSongPlaylistHandler:', error);
+      
+      if (error instanceof ClientError) {
+        const response = h.response({
+          status: 'fail',
+          message: error.message,
+        });
+        response.code(error.statusCode);
+        return response;
+      }
+
+      const response = h.response({
+        status: 'error',
+        message: 'Maaf, terjadi kegagalan pada server kami.',
+      });
+      response.code(500);
+      return response;
+    }
   }
 
   async deleteSongPlaylistHandler(request, h) {

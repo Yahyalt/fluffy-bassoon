@@ -32,12 +32,22 @@ class PlaylistsService {
   }
 
   async getPlaylists(owner) {
-    const query = {
-      text: 'SELECT * FROM playlists WHERE owner = $1',
-      values: [owner],
-    };
-    const result = await this._pool.query(query);
-    return result.rows.map(mapDBToModel);
+    try {
+      const query = {
+        text: `SELECT DISTINCT p.id, p.name, u.username 
+               FROM playlists p
+               LEFT JOIN users u ON u.id = p.owner
+               LEFT JOIN collaborations c ON c.playlist_id = p.id
+               WHERE p.owner = $1 OR c.user_id = $1`,
+        values: [owner],
+      };
+
+      const result = await this._pool.query(query);
+      return result.rows;
+    } catch (error) {
+      console.error('Error in getPlaylists:', error);
+      throw error;
+    }
   }
 
   async deletePlaylistById(id) {

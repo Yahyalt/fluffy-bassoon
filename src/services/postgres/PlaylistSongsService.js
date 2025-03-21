@@ -53,13 +53,14 @@ class PlaylistSongsService {
   }
 
   async verifyCollaborator(playlistId, songId) {
+  async verifyCollaborator(playlistId, userId) {
     const query = {
-      text: 'SELECT * FROM playlist_songs WHERE playlist_id = $1 AND song_id = $2',
-      values: [playlistId, songId],
+      text: 'SELECT * FROM collaborations WHERE playlist_id = $1 AND user_id = $2',
+      values: [playlistId, userId],
     };
     const result = await this._pool.query(query);
     if (!result.rows.length) {
-      throw new InvariantError('playlist songs gagal diverifikasi');
+      throw new InvariantError('Kolaborasi tidak ditemukan');
     }
   }
 }

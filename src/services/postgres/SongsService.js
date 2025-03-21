@@ -94,9 +94,14 @@ class SongsService {
     return result.rows[0].id;
   }
 
-  async getSongs() {
-    const result = await this._pool.query('SELECT * FROM songs');
-    return result.rows.map(mapDBToModel);
+  async getSongs(title = '') {
+    const query = {
+      text: 'SELECT id, title, performer FROM songs WHERE LOWER(title) LIKE LOWER($1)',
+      values: [`%${title}%`],
+    };
+
+    const result = await this._pool.query(query);
+    return result.rows;
   }
 
   async getSongById(id) {

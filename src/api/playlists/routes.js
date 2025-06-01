@@ -23,5 +23,13 @@ const routes = (handler) => [
       auth: 'musicapp_jwt',
     },
   },
+  {
+    method: 'POST',
+    path: '/playlists/{id}/collaborators',
+    handler: handler.addCollaboratorHandler,
+    options: {
+      auth: 'musicapp_jwt',
+    },
+  },
 ];
 module.exports = routes;

@@ -52,6 +52,7 @@ class PlaylistSongsHandler {
       const { id: playlistId } = request.params;
       const { id: credentialId } = request.auth.credentials;
 
+      // console.log('Getting songs for playlist:', playlistId, 'user:', credentialId);
       await this._playlistsService.verifyPlaylistAccess(playlistId, credentialId);
       const playlist = await this._playlistSongsService.getPlaylistWithSongs(playlistId);
 

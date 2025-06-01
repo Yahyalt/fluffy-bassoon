@@ -79,6 +79,72 @@ class PlaylistsService {
     }
   }
 
+  // async verifyPlaylistAccess(playlistId, userId) {
+  //   try {
+  //     // 1. First check if playlist exists
+  //     const playlistExists = await this._pool.query({
+  //       text: 'SELECT 1 FROM playlists WHERE id = $1',
+  //       values: [playlistId],
+  //     });
+
+  //     if (!playlistExists.rows.length) {
+  //       throw new NotFoundError('Playlist tidak ditemukan'); // 404
+  //     }
+  //     const query = {
+  //       text: `SELECT 1 FROM playlists p
+  //              LEFT JOIN collaborations c ON c.playlist_id = p.id
+  //              WHERE p.id = $1 AND (p.owner = $2 OR c.user_id = $2)`,
+  //       values: [playlistId, userId],
+  //     };
+
+  //     const result = await this._pool.query(query);
+
+  //     if (!result.rows.length) {
+  //       throw new AuthorizationError('Anda tidak berhak mengakses resource ini');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error in verifyPlaylistAccess:', error);
+  //     throw error;
+  //   }
+  // }
+
+//   async verifyPlaylistAccess(playlistId, userId) {
+//   try {
+//     console.log('Verifying access for:', { playlistId, userId });
+
+//     // 1. Check if playlist exists
+//     const playlistExists = await this._pool.query({
+//       text: 'SELECT owner FROM playlists WHERE id = $1',
+//       values: [playlistId],
+//     });
+
+//     console.log('Playlist query result:', playlistExists.rows);
+
+//     if (!playlistExists.rows.length) {
+//       throw new NotFoundError('Playlist tidak ditemukan');
+//     }
+
+//     // 2. Check access rights
+//     const query = {
+//       text: `SELECT p.owner, c.user_id 
+//              FROM playlists p
+//              LEFT JOIN collaborations c ON c.playlist_id = p.id
+//              WHERE p.id = $1 AND (p.owner = $2 OR c.user_id = $2)`,
+//       values: [playlistId, userId],
+//     };
+
+//     const result = await this._pool.query(query);
+//     console.log('Access rights query result:', result.rows);
+
+//     if (!result.rows.length) {
+//       throw new AuthorizationError('Anda tidak berhak mengakses resource ini');
+//     }
+//   } catch (error) {
+//     console.error('Error in verifyPlaylistAccess:', error);
+//     throw error;
+//   }
+// }
+
   async verifyPlaylistAccess(playlistId, userId) {
     try {
       await this.verifyPlaylistOwner(playlistId, userId);

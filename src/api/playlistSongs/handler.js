@@ -87,7 +87,9 @@ class PlaylistSongsHandler {
     try {
       this._validator.validatePlaylistSongPayload(request.payload);
       const { id: credentialId } = request.auth.credentials;
-      const { playlistId, songId } = request.payload;
+      // const { playlistId, songId } = request.payload;
+      const { id: playlistId } = request.params;
+      const { songId } = request.payload;
 
       await this._playlistsService.verifyPlaylistOwner(
         playlistId,

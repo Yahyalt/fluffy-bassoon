@@ -9,6 +9,7 @@ class PlaylistHandler {
     this.postPlaylistHandler = this.postPlaylistHandler.bind(this);
     this.getPlaylistsHandler = this.getPlaylistsHandler.bind(this);
     this.deletePlaylistByIdHandler = this.deletePlaylistByIdHandler.bind(this);
+    this.addCollaboratorHandler = this.addCollaboratorHandler.bind(this);
   }
 
   async postPlaylistHandler(request, h) {

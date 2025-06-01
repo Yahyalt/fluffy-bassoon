@@ -98,5 +98,18 @@ class PlaylistSongsService {
       throw new InvariantError('Kolaborasi tidak ditemukan');
     }
   }
+
+  async addCollaborator(playlistId, userId) {
+    const id = `collab-${nanoid(16)}`;
+    const query = {
+      text: 'INSERT INTO collaborations VALUES($1, $2, $3) RETURNING id',
+      values: [id, playlistId, userId],
+    };
+    const result = await this._pool.query(query);
+    if (!result.rows.length) {
+      throw new InvariantError('Kolaborasi gagal ditambahkan');
+    }
+    return result.rows[0].id;
+  }
 }
 module.exports = PlaylistSongsService;

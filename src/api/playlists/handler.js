@@ -129,17 +129,24 @@ class PlaylistHandler {
     }
   }
 
-  async deletePlaylistByIdHandler(request, h) {
+  async addCollaboratorHandler(request, h) {
     try {
-      const { id } = request.params;
+      const { id: playlistId } = request.params;
+      const { userId } = request.payload;
       const { id: credentialId } = request.auth.credentials;
-
-      await this._service.verifyPlaylistOwner(id, credentialId);
-      await this._service.deletePlaylistById(id);
-      return {
+  
+      // Only owner can add collaborator
+      await this._service.verifyPlaylistOwner(playlistId, credentialId);
+  
+      // Add collaborator using PlaylistSongsService
+      await this._service._playlistSongService.addCollaborator(playlistId, userId);
+  
+      const response = h.response({
         status: 'success',
-        message: 'Playlist berhasil dihapus',
-      };
+        message: 'Kolaborator berhasil ditambahkan',
+      });
+      response.code(201);
+      return response;
     } catch (error) {
       if (error instanceof ClientError) {
         const response = h.response({

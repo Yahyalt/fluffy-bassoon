@@ -71,7 +71,7 @@ class PlaylistsService {
 
     const result = await this._pool.query(query);
     if (!result.rowCount) {
-      throw new NotFoundError('User tidak ditemukan woii');
+      throw new NotFoundError('User tidak ditemukan');
     }
     const playlist = result.rows[0];
     if (playlist.owner !== owner) {

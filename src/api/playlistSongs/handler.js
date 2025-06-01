@@ -64,7 +64,7 @@ class PlaylistSongsHandler {
       };
     } catch (error) {
       console.error('Error in getSongPlaylistHandler:', error);
-      
+
       if (error instanceof ClientError) {
         const response = h.response({
           status: 'fail',
